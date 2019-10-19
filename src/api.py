@@ -32,6 +32,4 @@ def move_response(move):
     )
 
 def end_response():
-    return Response(
-        status=200
-    )
+    return "End Game"
