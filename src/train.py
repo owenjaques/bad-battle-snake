@@ -14,6 +14,7 @@ def createModel():
 	model.add(Dense(64, activation='sigmoid'))
 	model.add(Dense(4, activation='linear'))
 	model.compile(loss='mse', optimizer='adam', metrics=['mae'])
+	#loads weights comment out if you want new **WILL DELETE OLD WEIGHTS**
 	try:
 		model.load_weights('model.h5')
 		print("Loaded weights from model.h5")
@@ -22,11 +23,11 @@ def createModel():
 
 def getReward(data):
 	if data['you']['health'] == 0 or data['turn'] == 0:
-		return -20
+		return -10
 	elif data['you']['health'] == 100:
-		return 10
+		return 1
 	else:
-		return 20
+		return 1
 
 def getState(data):
 	#maps the game board to determine a state
@@ -79,13 +80,14 @@ def getDirection(data):
 	new_s = getState(data)
 	#tries to keep a bit of randomness 
 	if 0.5*random.random() < eps:
-		direction = np.argmax(model.predict(new_s)[0])
+		direction = np.argmax(model.predict(new_s)) % 4 #picks a columns from the table of directions generated
 	else:
 		direction = random.randint(0,3)
 	if s != []:
 		target = getReward(data) + lr*(y*np.max(model.predict(new_s)[0]))
 		target_vec = model.predict(s)
-		target_vec[0][old_direction] = target
+		for i in range(11):
+			target_vec[i][old_direction] = target
 		model.fit(s, target_vec, epochs=1, verbose=0)
 	s = new_s
 	model.save_weights('model.h5')
