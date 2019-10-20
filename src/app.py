@@ -1,7 +1,7 @@
 import json
 from flask import Flask, request
 from api import ping_response, start_response, move_response, end_response
-from train import getDirection
+from train import getDirection, createModel
 
 app = Flask(__name__)
 
@@ -31,4 +31,5 @@ def end():
 	return end_response()
 
 if __name__ == '__main__':
-	app.run(host='0.0.0.0', port=8080)
+	createModel()
+	app.run(host='0.0.0.0', port=8080, threaded=False)#had issues with the model pridcting with multi threading

@@ -1,17 +1,32 @@
 import numpy as np
 import random
+from keras import Sequential
+from keras.layers import InputLayer, Dense, Flatten
 
 q_table = {}
-s = ""
+s = []
 direction = 1
+
+def createModel():
+	global model
+	model = Sequential()
+	model.add(InputLayer(batch_input_shape=(11,11)))
+	model.add(Dense(64, activation='sigmoid'))
+	model.add(Dense(4, activation='linear'))
+	model.compile(loss='mse', optimizer='adam', metrics=['mae'])
+	try:
+		model.load_weights('model.h5')
+		print("Loaded weights from model.h5")
+	except Exception as e:
+		print(e)
 
 def getReward(data):
 	if data['you']['health'] == 0 or data['turn'] == 0:
-		return -5
+		return -20
 	elif data['you']['health'] == 100:
-		return 1
+		return 10
 	else:
-		return 0.5
+		return 20
 
 def getState(data):
 	#maps the game board to determine a state
@@ -41,12 +56,12 @@ def getState(data):
 	game_board[y][x] = HEAD
 
 	#creates unique string to represent state
-	id = ""
-	for i in range(11):
-		for j in range(11):
-			id += str(game_board[i][j])
+	# id = ""
+	# for i in range(11):
+	# 	for j in range(11):
+	# 		id += str(game_board[i][j])
 
-	return id
+	return game_board
 
 	
 
@@ -55,26 +70,23 @@ def getDirection(data):
 	#heavily borrowed form a tutorial on machinelearning.com (https://adventuresinmachinelearning.com/reinforcement-learning-tutorial-python-keras/)
 	global s
 	global direction
+	global model
 	old_direction = direction
 	lr = 0.8
 	y = 0.95
+	eps = 0.5
 	directions = ['up', 'down', 'left', 'right']
 	new_s = getState(data)
-	if new_s not in q_table:
-		direction = random.randint(0,3)
-		q_table[new_s] = np.zeros(4)
 	#tries to keep a bit of randomness 
+	if 0.5*random.random() < eps:
+		direction = np.argmax(model.predict(new_s)[0])
 	else:
-		if random.random() < np.max(q_table[s]):
-			direction = np.argmax(q_table[s])
-		else:
-			direction = random.randint(0,3)
-	if s != "":
-		q_table[s][old_direction] += 0.8*getReward(data) + 0.2*lr*(y*np.max(q_table[new_s]))
+		direction = random.randint(0,3)
+	if s != []:
+		target = getReward(data) + lr*(y*np.max(model.predict(new_s)[0]))
+		target_vec = model.predict(s)
+		target_vec[0][old_direction] = target
+		model.fit(s, target_vec, epochs=1, verbose=0)
 	s = new_s
-
-
-	print(q_table)
-	
-
+	model.save_weights('model.h5')
 	return directions[direction]
