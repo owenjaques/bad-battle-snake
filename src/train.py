@@ -2,16 +2,16 @@ import numpy as np
 import random
 
 q_table = {}
+s = ""
+direction = 1
 
-directions = ['up', 'down', 'left', 'right']
-
-# def getReward(data):
-# 	if data['you']['health'] == 0:
-# 		do bad thing
-# 	elif data['you']['health'] == 100:
-# 		do good thing
-# 	else
-# 		do ok thing
+def getReward(data):
+	if data['you']['health'] == 0 or data['turn'] == 0:
+		return -5
+	elif data['you']['health'] == 100:
+		return 1
+	else:
+		return 0.5
 
 def getState(data):
 	#maps the game board to determine a state
@@ -40,27 +40,41 @@ def getState(data):
 	y = head['y']
 	game_board[y][x] = HEAD
 
-	#turns gameboard array into unique string
-	# b_id = ""
-	# for i in range(BOARDWIDTH):
-	# 	for j in range(BOARDWIDTH):
-	# 		b_id += str(game_board[i][j])
+	#creates unique string to represent state
+	id = ""
+	for i in range(11):
+		for j in range(11):
+			id += str(game_board[i][j])
 
-	# return b_id
-
-	return game_board
+	return id
 
 	
 
 def getDirection(data):
+	#my terrible job of implementing q learning slapped in some extra numbers in there to mess with it
+	#heavily borrowed form a tutorial on machinelearning.com (https://adventuresinmachinelearning.com/reinforcement-learning-tutorial-python-keras/)
+	global s
+	global direction
+	old_direction = direction
+	lr = 0.8
+	y = 0.95
 	directions = ['up', 'down', 'left', 'right']
-	s = getState(data)
-	direction = random.randint(0,3)
-	# if s in q_table:
-	# 	direction = np.amax(q_table[s])
-	# else:
-	# 	q_table[s] = np.zeros((5))
+	new_s = getState(data)
+	if new_s not in q_table:
+		direction = random.randint(0,3)
+		q_table[new_s] = np.zeros(4)
+	#tries to keep a bit of randomness 
+	else:
+		if random.random() < np.max(q_table[s]):
+			direction = np.argmax(q_table[s])
+		else:
+			direction = random.randint(0,3)
+	if s != "":
+		q_table[s][old_direction] += 0.8*getReward(data) + 0.2*lr*(y*np.max(q_table[new_s]))
+	s = new_s
 
-	# print(q_table)
+
+	print(q_table)
+	
 
 	return directions[direction]

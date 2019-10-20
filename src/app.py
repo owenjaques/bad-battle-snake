@@ -21,12 +21,14 @@ def start():
 @app.route('/move', methods = ['GET', 'POST'])
 def move():
 	data = request.get_json()
+	print("turn = ", data['turn'])
 	return move_response(getDirection(data))
 
 @app.route('/end', methods = ['GET', 'POST'])
 def end():
 	print("***END***")
-	return start_response()
+
+	return end_response()
 
 if __name__ == '__main__':
 	app.run(host='0.0.0.0', port=8080)
