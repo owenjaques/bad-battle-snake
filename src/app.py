@@ -27,7 +27,6 @@ def move():
 @app.route('/end', methods = ['GET', 'POST'])
 def end():
 	print("***END***")
-
 	return end_response()
 
 if __name__ == '__main__':
