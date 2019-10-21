@@ -32,4 +32,5 @@ def end():
 
 if __name__ == '__main__':
 	createModel()
-	app.run(host='0.0.0.0', port=8080, threaded=False)#had issues with the model pridcting with multi threading
+	port = input("Please enter the port ex:'8080'")
+	app.run(host='0.0.0.0', port=port, threaded=False)#had issues with the model pridcting with multi threading

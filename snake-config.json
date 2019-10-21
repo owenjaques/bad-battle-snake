@@ -6,6 +6,10 @@
     {
       "name": "Snake 1",
       "url": "http://localhost:8080"
+    },
+    {
+      "name": "Snake 2",
+      "url": "http://localhost:8081"
     }
   ]
 }
