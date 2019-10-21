@@ -15,18 +15,18 @@ def createModel():
 	model.compile(loss='mse', optimizer='adam', metrics=['mae'])
 	#loads weights comment out if you want new **WILL DELETE OLD WEIGHTS**
 	try:
-		model.load_weights('model.h5')
-		print("Loaded weights from model.h5")
+		model.load_weights('weights.h5')
+		print("Loaded weights from weights.h5")
 	except Exception as e:
 		print(e)
 
 def getReward(data):
 	if data['you']['health'] == 0 or data['turn'] == 0:
 		return -1
-	elif data['you']['health'] == 100:
-		return 1
+	elif data['you']['health'] == 100 and data['turn'] != 0:
+		return 0.5
 	else:
-		return 0
+		return 1
 
 def getState(data):
 	#maps the game board to determine a state
@@ -75,13 +75,13 @@ def getDirection(data):
 	global direction
 	global model
 	old_direction = direction
-	lr = 0.8
+	lr = 0.001
 	y = 0.95
 	eps = 0.5
 	directions = ['up', 'down', 'left', 'right']
 	new_s = getState(data)
 	#tries to keep a bit of randomness 
-	if random.random() < eps:
+	if 0.5*random.random() < eps:
 		direction = np.argmax(model.predict(new_s)[0])
 		print(model.predict(new_s)[0])
 	else:
@@ -92,5 +92,5 @@ def getDirection(data):
 		target_vec[0][old_direction] = target
 		model.fit(s, target_vec, epochs=1, verbose=0)
 	s = new_s
-	model.save_weights('model.h5')
+	model.save_weights('weights.h5')
 	return directions[direction]
