@@ -16,5 +16,5 @@ for i in range(500):
 
 	sp.run(['../engine/engine', 'run', '-g', s])
 
-	time.sleep(10)
+	time.sleep(5)
 

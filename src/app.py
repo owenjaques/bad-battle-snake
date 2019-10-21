@@ -21,8 +21,9 @@ def start():
 @app.route('/move', methods = ['GET', 'POST'])
 def move():
 	data = request.get_json()
-	print("turn = ", data['turn'])
-	return move_response(getDirection(data))
+	move = getDirection(data)
+	print("turn = ", data['turn'], "moving ", move)
+	return move_response(move)
 
 @app.route('/end', methods = ['GET', 'POST'])
 def end():
