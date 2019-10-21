@@ -1,7 +1,7 @@
 import numpy as np
 import random
 from keras import Sequential
-from keras.layers import InputLayer, Dense, Reshape, Conv2D, MaxPool2D, Flatten
+from keras.layers import InputLayer, Dense
 
 s = []
 direction = 1
@@ -10,9 +10,11 @@ def createModel():
 	global model
 	model = Sequential()
 	model.add(InputLayer(batch_input_shape=(13,13)))
-	model.add(Dense(100, activation='sigmoid'))
-	model.add(Dense(4, activation='linear'))
-	model.compile(loss='mse', optimizer='adam', metrics=['mae'])
+	model.add(Dense(120, activation='relu'))
+	model.add(Dense(120, activation='relu'))
+	model.add(Dense(120, activation='relu'))
+	model.add(Dense(4, activation='softmax'))
+	model.compile(loss='mse', optimizer='adam')
 	#loads weights comment out if you want new **WILL DELETE OLD WEIGHTS**
 	try:
 		model.load_weights('weights.h5')
@@ -26,7 +28,7 @@ def getReward(data):
 	elif data['you']['health'] == 100 and data['turn'] != 0:
 		return 0.5
 	else:
-		return 1
+		return 0
 
 def getState(data):
 	#maps the game board to determine a state
@@ -50,7 +52,7 @@ def getState(data):
 			y = points['y'] + 1
 			game_board[y][x] = SNAKEPART
 
-	#adds all food to mao
+	#adds all food to map
 	for food in data['board']['food']:
 		x = food['x'] + 1
 		y = food['y'] + 1
@@ -75,13 +77,13 @@ def getDirection(data):
 	global direction
 	global model
 	old_direction = direction
-	lr = 0.001
+	lr = 0.2
 	y = 0.95
-	eps = 0.5
+	eps = 0.8
 	directions = ['up', 'down', 'left', 'right']
 	new_s = getState(data)
 	#tries to keep a bit of randomness 
-	if 0.5*random.random() < eps:
+	if random.random() < eps:
 		direction = np.argmax(model.predict(new_s)[0])
 		print(model.predict(new_s)[0])
 	else:
