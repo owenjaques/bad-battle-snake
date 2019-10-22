@@ -5,7 +5,7 @@ import json
 import time
 import winsound
 
-for i in range(500):
+for i in range(1000):
 	print("Trial #", i)
 	try:
 		cmdCommand = "../engine/engine.exe create -c snake-config.json"
@@ -24,4 +24,8 @@ for i in range(500):
 		duration = 1000  # milliseconds
 		freq = 440  # Hz
 		winsound.Beep(freq, duration)
+
+duration = 10000  # milliseconds
+freq = 200  # Hz
+winsound.Beep(freq, duration)
 

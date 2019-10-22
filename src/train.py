@@ -78,7 +78,7 @@ def getDirection(data):
 	old_direction = direction
 	lr = 0.4
 	y = 0.95
-	eps = 0.6
+	eps = 0.9
 	directions = ['up', 'down', 'left', 'right']
 	new_s = getState(data)
 	#tries to keep a bit of randomness 
