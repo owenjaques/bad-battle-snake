@@ -4,16 +4,8 @@
   "food": 10,
   "snakes": [
     {
-      "name": "Dumb Snake",
-      "url": "http://localhost:8000"
-    },
-    {
-      "name": "Dumb Snake",
-      "url": "http://localhost:8002"
-    },
-    {
-      "name": "Snake 1",
-      "url": "http://localhost:8080"
+      "name": "Snake 3",
+      "url": "http://localhost:8082"
     },
     {
       "name": "Dumb Snake",
@@ -24,8 +16,8 @@
       "url": "http://localhost:8081"
     },
     {
-      "name": "Snake 3",
-      "url": "http://localhost:8082"
+      "name": "Snake 1",
+      "url": "http://localhost:8080"
     },
     {
       "name": "Snake 4",
