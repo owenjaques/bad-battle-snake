@@ -1,7 +1,7 @@
 import json
 from flask import Flask, request
 from api import ping_response, start_response, move_response, end_response
-from train import getDirection, createModel
+from snake import Snake
 
 app = Flask(__name__)
 
@@ -20,8 +20,9 @@ def start():
 
 @app.route('/move', methods = ['GET', 'POST'])
 def move():
+	global snake
 	data = request.get_json()
-	move = getDirection(data)
+	move = snake.getDirection(data)
 	print("turn = ", data['turn'], "moving ", move)
 	return move_response(move)
 
@@ -31,6 +32,7 @@ def end():
 	return end_response()
 
 if __name__ == '__main__':
-	createModel()
+	global snake
+	snake = Snake()
 	port = input("Please enter the port ex:'8080'")
 	app.run(host='0.0.0.0', port=port, threaded=False)#had issues with the model predicting with multi threading
