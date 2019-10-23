@@ -3,6 +3,7 @@ import random
 from keras import Sequential
 from keras.layers import InputLayer, Dense, Flatten, Reshape
 
+#I wanted to use static variables in the functions like c but I couldn't quite get it
 s = []
 direction = 1
 
@@ -24,6 +25,7 @@ def createModel():
 		print(e)
 
 def getReward(data):
+	#gives rewards to the snake depending if the last move was a desired behavior
 	if data['you']['health'] == 0 or data['turn'] == 0:
 		print("Snake died last turn")
 		return -10
@@ -74,29 +76,29 @@ def getState(data):
 	
 
 def getDirection(data):
-	#my terrible job of implementing q learning slapped in some extra numbers in there to mess with it
-	#heavily borrowed form a tutorial on machinelearning.com (https://adventuresinmachinelearning.com/reinforcement-learning-tutorial-python-keras/)
+	#my terrible job of implementing q learning
+	#heavily borrowed form a tutorial on machinelearning.com to train a game of cartpole (https://adventuresinmachinelearning.com/reinforcement-learning-tutorial-python-keras/)
 	global s
 	global direction
 	global model
 	old_direction = direction
 	lr = 0.9
 	y = 0.5
-	eps = 0.9
+	eps = 0.3 #lower epsilon to move with less randomness
 	directions = ['up', 'down', 'left', 'right']
 	new_s = getState(data)
-	#tries to keep a bit of randomness --remove 0.1* after training--
-	if 0.1*random.random() < eps:
+	#tries to keep a bit of randomness
+	if random.random() < eps:
 		pre = model.predict(new_s)[0]
 		print(pre)
 		direction = np.argmax(pre)
 	else:
 		direction = random.randint(0,3)
+	#will not execute if there is no former move to reward ie: start of training
 	if s != []:
 		target_vec = model.predict(s)
 		target = getReward(data) + lr*(y*(np.max(model.predict(new_s)[0])))
 		target_vec[0][old_direction] = target
-		print("target = ", target_vec[0])
 		model.fit(s, target_vec, epochs=1, verbose=0)
 	s = new_s
 	model.save_weights('weights.h5')
