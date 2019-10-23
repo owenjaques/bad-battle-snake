@@ -81,12 +81,12 @@ def getDirection(data):
 	global model
 	old_direction = direction
 	lr = 0.9
-	y = 0.3
+	y = 0.5
 	eps = 0.9
 	directions = ['up', 'down', 'left', 'right']
 	new_s = getState(data)
-	#tries to keep a bit of randomness --remove 10* after training--
-	if 10*random.random() < eps:
+	#tries to keep a bit of randomness --remove 0.1* after training--
+	if 0.1*random.random() < eps:
 		pre = model.predict(new_s)[0]
 		print(pre)
 		direction = np.argmax(pre)
