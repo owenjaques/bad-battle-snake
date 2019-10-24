@@ -84,7 +84,7 @@ for _ in range(NUMSNAKES):
 turns = 0
 
 #play a set amount of games (TRIALS)
-TRIALS = 500
+TRIALS = 250
 for trial in range(TRIALS):
 	print("TRIAL #", trial)
 	createGame()
@@ -101,7 +101,7 @@ for trial in range(TRIALS):
 		for snake in env.controller.snakes:
 			#sees if snake is dead
 			if snake == None:
-				print("Trial #", trial, " ended with ", turns, " turns")
+				print("ended with", turns, "turns")
 				break
 			if obs[1][i] == 1:
 				snake.health = 100
@@ -115,4 +115,4 @@ for trial in range(TRIALS):
 			#env.render(close=True)
 			i += 1
 
-print("Average turn length: ", turns/TRIALS)
+print("Average turn length:", turns/TRIALS)
