@@ -101,6 +101,7 @@ for trial in range(TRIALS):
 		for snake in env.controller.snakes:
 			#sees if snake is dead
 			if snake == None:
+				print("Trial #", trial, " ended with ", turns, " turns")
 				break
 			if obs[1][i] == 1:
 				snake.health = 100
