@@ -28,9 +28,9 @@ class Snake:
 
 	def getReward(self, data, verbose):
 		#gives rewards to the snake depending if the last move was a desired behavior
-		if data['you']['health'] < 50:
-			self.health_bad = True
-		#TODO stop penalizing winning
+		# if data['you']['health'] < 50:
+		# 	self.health_bad = True
+		#TODO stop penalizing winning & give rewards for other snakes dying
 		if data['you']['health'] == 0 or data['turn'] == 0:
 			if verbose == True:
 				print("Snake died last turn")
@@ -39,11 +39,11 @@ class Snake:
 			if verbose == True:
 				print("Snake ate some munch last turn")
 			#prioritizes eating food when health is < 50
-			if self.health_bad:
-				self.health_bad = False
-				return 3
-			else:
-				return 1
+			# if self.health_bad:
+			# 	self.health_bad = False
+			# 	return 3
+			# else:
+			return 3
 		else:
 			if verbose == True:
 				print("Snake stayed alive last turn")
