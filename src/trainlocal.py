@@ -86,7 +86,7 @@ TRIALS = 10
 for trial in range(TRIALS):
 	print("TRIAL #", trial)
 	createGame()
-	actions = [2, 2]
+	actions = [2, 2]#TODO: make this a loop based on num snakes
 
 	#maxes out at 250 turns
 	for turn in range(250):

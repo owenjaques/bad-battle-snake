@@ -8,6 +8,7 @@ class Snake:
 		self.s = []
 		self.direction = 0
 		self.createModel()
+		self.health_bad = False
 
 	def createModel(self):
 		self.model = Sequential()
@@ -27,6 +28,8 @@ class Snake:
 
 	def getReward(self, data, verbose):
 		#gives rewards to the snake depending if the last move was a desired behavior
+		if data['you']['health'] < 50:
+			self.health_bad = True
 		if data['you']['health'] == 0 or data['turn'] == 0:
 			if verbose == True:
 				print("Snake died last turn")
@@ -34,7 +37,12 @@ class Snake:
 		elif data['you']['health'] == 100 and data['turn'] != 0:
 			if verbose == True:
 				print("Snake ate some munch last turn")
-			return 1
+			#prioritizes eating food when health is < 50
+			if self.health_bad:
+				self.health_bad = False
+				return 3
+			else:
+				return 1
 		else:
 			if verbose == True:
 				print("Snake stayed alive last turn")
@@ -91,7 +99,7 @@ class Snake:
 		old_direction = self.direction
 		lr = 0.9
 		y = 0.5
-		eps = 1 #raise epsilon to move with less randomness
+		eps = 0.5 #raise epsilon to move with less randomness
 		directions = ['up', 'down', 'left', 'right']
 		new_s = self.getState(data)
 		#tries to keep a bit of randomness
