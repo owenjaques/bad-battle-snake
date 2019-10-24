@@ -78,8 +78,14 @@ class Snake:
 		return game_board
 
 	
+	def saveModel(self):
+		try:
+			self.model.save_weights('weights.h5')
+			print("Model Savel to weights.h5")
+		except Exception as e:
+			print(e)
 
-	def getDirection(self, data, verbose):
+	def getDirection(self, data, verbose, save_model):
 		#my terrible job of implementing q learning
 		#heavily borrowed form a tutorial on machinelearning.com to train a game of cartpole (https://adventuresinmachinelearning.com/reinforcement-learning-tutorial-python-keras/)
 		old_direction = self.direction
@@ -103,8 +109,7 @@ class Snake:
 			target_vec[0][old_direction] = target
 			self.model.fit(self.s, target_vec, epochs=1, verbose=0)
 		self.s = new_s
-		try:
-			self.model.save_weights('weights.h5')
-		except Exception as e:
-			print(e)
+		#only save weights on first turn saving weights from last round --faster
+		if data['turn'] == 0 and save_model:
+			self.saveModel()
 		return directions[self.direction]

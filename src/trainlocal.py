@@ -32,9 +32,7 @@ def getState(obs, snake, turn):
 		"turn": turn,
 		"board": {
 			"snakes": [],
-			"food": [
-
-			]
+			"food": []
 		},
 		"you":
 			{
@@ -76,7 +74,7 @@ def filterActions(a):
 
 #creates the snakes
 my_snakes = []
-NUMSNAKES = 4
+NUMSNAKES = 2
 for _ in range(NUMSNAKES):
 	my_snakes.append(Snake())
 
@@ -84,18 +82,18 @@ for _ in range(NUMSNAKES):
 turns = 0
 
 #play a set amount of games (TRIALS)
-TRIALS = 3
+TRIALS = 10
 for trial in range(TRIALS):
 	print("TRIAL #", trial)
 	createGame()
-	actions = [2, 2, 2, 2]
+	actions = [2, 2]
 
 	#maxes out at 250 turns
 	for turn in range(250):
 		obs = env.step(actions)
 		#sees if it needs to quit the loop
 		if obs[2] == True:
-			print("ended with", turns, "turns")
+			print("ended with", turn, "turns")
 			break
 		turns += 1
 		i = 0
@@ -109,10 +107,14 @@ for trial in range(TRIALS):
 			elif snake.health <= 0:
 				snake = None
 				break
-			actions[i] = filterActions(my_snakes[i].getDirection(getState(obs, snake, turn), False))
+			actions[i] = filterActions(my_snakes[i].getDirection(getState(obs, snake, turn,), False, False))
 			snake.health -= 1
 			#comment out this next line if you don't want to watch
-			env.render(close=True)
+			#env.render(close=True)
 			i += 1
+
+#saves model only once for enhanced speed
+for snake in my_snakes:
+	snake.saveModel()
 
 print("Average turn length:", turns/TRIALS)
