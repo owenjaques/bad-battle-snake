@@ -22,7 +22,7 @@ def start():
 def move():
 	global snake
 	data = request.get_json()
-	move = snake.getDirection(data)
+	move = snake.getDirection(data, True)
 	print("turn = ", data['turn'], "moving ", move)
 	return move_response(move)
 

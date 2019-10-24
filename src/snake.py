@@ -25,16 +25,19 @@ class Snake:
 		except Exception as e:
 			print(e)
 
-	def getReward(self, data):
+	def getReward(self, data, verbose):
 		#gives rewards to the snake depending if the last move was a desired behavior
 		if data['you']['health'] == 0 or data['turn'] == 0:
-			print("Snake died last turn")
+			if verbose == True:
+				print("Snake died last turn")
 			return -10
 		elif data['you']['health'] == 100 and data['turn'] != 0:
-			print("Snake ate some munch last turn")
+			if verbose == True:
+				print("Snake ate some munch last turn")
 			return 1
 		else:
-			print("Snake stayed alive last turn")
+			if verbose == True:
+				print("Snake stayed alive last turn")
 			return 0.5
 
 	def getState(self, data):
@@ -76,7 +79,7 @@ class Snake:
 
 	
 
-	def getDirection(self, data):
+	def getDirection(self, data, verbose):
 		#my terrible job of implementing q learning
 		#heavily borrowed form a tutorial on machinelearning.com to train a game of cartpole (https://adventuresinmachinelearning.com/reinforcement-learning-tutorial-python-keras/)
 		old_direction = self.direction
@@ -88,16 +91,20 @@ class Snake:
 		#tries to keep a bit of randomness
 		if random.random() < eps:
 			pre = self.model.predict(new_s)[0]
-			print(pre)
+			if verbose == True:
+				print(pre)
 			self.direction = np.argmax(pre)
 		else:
 			self.direction = random.randint(0,3)
 		#will not execute if there is no former move to reward ie: start of training
 		if self.s != []:
 			target_vec = self.model.predict(self.s)
-			target = self.getReward(data) + lr*(y*(np.max(self.model.predict(new_s)[0])))
+			target = self.getReward(data, verbose) + lr*(y*(np.max(self.model.predict(new_s)[0])))
 			target_vec[0][old_direction] = target
 			self.model.fit(self.s, target_vec, epochs=1, verbose=0)
 		self.s = new_s
-		self.model.save_weights('weights.h5')
+		try:
+			self.model.save_weights('weights.h5')
+		except Exception as e:
+			print(e)
 		return directions[self.direction]
