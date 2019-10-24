@@ -18,7 +18,7 @@ def createGame():
 	env.snake_size = 3
 	env.unit_size = 1
 	env.unit_gap = 0
-	env.num_foods = random.randint(1,10)
+	env.num_foods = random.randint(5,10)
 	env.random_init = True
 	env.reset()
 	#set all healths
@@ -86,12 +86,17 @@ TRIALS = 10
 for trial in range(TRIALS):
 	print("TRIAL #", trial)
 	createGame()
-	actions = [2, 2]#TODO: make this a loop based on num snakes
+
+	#first action for each snake
+	actions = []
+	for _ in range(NUMSNAKES):
+		actions.append(2)
 
 	#maxes out at 250 turns
 	for turn in range(250):
 		obs = env.step(actions)
 		#sees if it needs to quit the loop
+		#TODO: see if there is only one snake remaining if so declare snake the winner and end game
 		if obs[2] == True:
 			print("ended with", turn, "turns")
 			break
