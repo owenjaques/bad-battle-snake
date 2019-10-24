@@ -84,7 +84,7 @@ for _ in range(NUMSNAKES):
 turns = 0
 
 #play a set amount of games (TRIALS)
-TRIALS = 250
+TRIALS = 3
 for trial in range(TRIALS):
 	print("TRIAL #", trial)
 	createGame()
@@ -95,13 +95,13 @@ for trial in range(TRIALS):
 		obs = env.step(actions)
 		#sees if it needs to quit the loop
 		if obs[2] == True:
+			print("ended with", turns, "turns")
 			break
 		turns += 1
 		i = 0
 		for snake in env.controller.snakes:
 			#sees if snake is dead
 			if snake == None:
-				print("ended with", turns, "turns")
 				break
 			if obs[1][i] == 1:
 				snake.health = 100
@@ -112,7 +112,7 @@ for trial in range(TRIALS):
 			actions[i] = filterActions(my_snakes[i].getDirection(getState(obs, snake, turn), False))
 			snake.health -= 1
 			#comment out this next line if you don't want to watch
-			#env.render(close=True)
+			env.render(close=True)
 			i += 1
 
 print("Average turn length:", turns/TRIALS)
