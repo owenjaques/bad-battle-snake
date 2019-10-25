@@ -4,6 +4,7 @@ import random
 import time
 from collections import deque
 from snake import Snake
+import matplotlib.pyplot as plt
 
 #Utilizes the gym-snake environment to train locally with some slight modifications
 # 1 Remove the check in to see if there are more snakes then there should be in the controller 
@@ -75,6 +76,7 @@ def filterActions(a):
 		return 3
 
 NGENERATIONS = 100
+generations = []
 for generation in range(NGENERATIONS):
 
 	#creates the snakes
@@ -125,4 +127,10 @@ for generation in range(NGENERATIONS):
 	for snake in my_snakes:
 		snake.saveModel()
 
+	generations.append(turns/TRIALS)
 	print("Generation", generation, "Average turn length:", turns/TRIALS)
+
+plt.plot(generations)
+plt.ylabel('Avg. turns')
+plt.xlabel('Generations')
+plt.show()
