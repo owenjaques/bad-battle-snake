@@ -7,6 +7,7 @@ from snake import Snake
 
 #Utilizes the gym-snake environment to train locally with some slight modifications
 # 1 Remove the check in to see if there are more snakes then there should be in the controller 
+# 2 Changed food randommization coded number of food into the files just added create food for random num
 
 
 def createGame():
@@ -84,7 +85,7 @@ for generation in range(5):
 	turns = 0
 
 	#play a set amount of games (TRIALS)
-	TRIALS = 500
+	TRIALS = 1000
 	for trial in range(TRIALS):
 		print("TRIAL #", trial)
 		createGame()

@@ -26,26 +26,19 @@ class Snake:
 		except Exception as e:
 			print(e)
 
-	def getReward(self, data, verbose):
+	def getReward(self, data, verbose=True):
 		#gives rewards to the snake depending if the last move was a desired behavior
-		# if data['you']['health'] < 50:
-		# 	self.health_bad = True
 		#TODO stop penalizing winning & give rewards for other snakes dying
 		if data['you']['health'] == 0 or data['turn'] == 0:
-			if verbose == True:
+			if verbose:
 				print("Snake died last turn")
 			return -10
 		elif data['you']['health'] == 100 and data['turn'] != 0:
-			if verbose == True:
+			if verbose:
 				print("Snake ate some munch last turn")
-			#prioritizes eating food when health is < 50
-			# if self.health_bad:
-			# 	self.health_bad = False
-			# 	return 3
-			# else:
 			return 3
 		else:
-			if verbose == True:
+			if verbose:
 				print("Snake stayed alive last turn")
 			return 0.5
 
@@ -94,7 +87,7 @@ class Snake:
 		except Exception as e:
 			print(e)
 
-	def getDirection(self, data, verbose, save_model):
+	def getDirection(self, data, verbose=True, save_model=True):
 		#my terrible job of implementing q learning
 		#heavily borrowed form a tutorial on machinelearning.com to train a game of cartpole (https://adventuresinmachinelearning.com/reinforcement-learning-tutorial-python-keras/)
 		old_direction = self.direction
