@@ -87,7 +87,7 @@ for generation in range(5):
 	#play a set amount of games (TRIALS)
 	TRIALS = 1000
 	for trial in range(TRIALS):
-		print("TRIAL #", trial)
+		print("TRIAL #", trial, end='')
 		createGame()
 
 		#first action for each snake
@@ -101,7 +101,7 @@ for generation in range(5):
 			#sees if it needs to quit the loop
 			#TODO: see if there is only one snake remaining if so declare snake the winner and end game
 			if obs[2] == True:
-				print("ended with", turn, "turns")
+				print(" ended with", turn, "turns")
 				break
 			turns += 1
 			i = 0
