@@ -1,20 +1,22 @@
 import numpy as np
 import random
 from keras import Sequential
-from keras.layers import InputLayer, Dense, Flatten, Reshape
+from keras.layers import InputLayer, Dense, Flatten, Reshape, Dropout
 
 class Snake:
-	def __init__(self):
+	def __init__(self, eps=1):
 		self.s = []
 		self.direction = 0
 		self.createModel()
 		self.health_bad = False
+		self.eps = eps if eps is not None else 1
 
 	def createModel(self):
 		self.model = Sequential()
 		self.model.add(InputLayer(input_shape=(13,13,4), batch_size=1))
 		self.model.add(Dense(32, activation='relu'))
 		self.model.add(Dense(32, activation='relu'))
+		#self.model.add(Dropout(0.05))
 		self.model.add(Dense(32, activation='relu'))
 		self.model.add(Flatten())
 		self.model.add(Dense(4, activation='softmax'))
@@ -93,11 +95,10 @@ class Snake:
 		old_direction = self.direction
 		lr = 0.9
 		y = 0.5
-		eps = 1 #raise epsilon to move with less randomness
 		directions = ['up', 'down', 'left', 'right']
 		new_s = self.getState(data)
 		#tries to keep a bit of randomness
-		if random.random() < eps:
+		if random.random() < self.eps:
 			pre = self.model.predict(new_s)[0]
 			if verbose == True:
 				print(pre)

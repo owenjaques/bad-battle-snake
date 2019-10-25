@@ -8,6 +8,7 @@ from snake import Snake
 #Utilizes the gym-snake environment to train locally with some slight modifications
 # 1 Remove the check in to see if there are more snakes then there should be in the controller 
 # 2 Changed food randommization coded number of food into the files just added create food for random num
+# 3 changed snake starting positions in controlle to better emulate the battle-snake game engine
 
 
 def createGame():
@@ -73,27 +74,26 @@ def filterActions(a):
 	if a == 'left':
 		return 3
 
-for generation in range(5):
+NGENERATIONS = 100
+for generation in range(NGENERATIONS):
 
 	#creates the snakes
 	my_snakes = []
 	NUMSNAKES = 4
 	for _ in range(NUMSNAKES):
-		my_snakes.append(Snake())
+		my_snakes.append(Snake(eps=generation*0.02))
 
 	#used for calculating average
 	turns = 0
 
 	#play a set amount of games (TRIALS)
-	TRIALS = 1000
+	TRIALS = 100
 	for trial in range(TRIALS):
-		print("TRIAL #", trial, end='')
+		print("GEN", generation, "TRIAL", trial, end='')
 		createGame()
 
 		#first action for each snake
-		actions = []
-		for _ in range(NUMSNAKES):
-			actions.append(2)
+		actions = [2, 0, 0, 2]
 
 		#maxes out at 250 turns
 		for turn in range(250):
