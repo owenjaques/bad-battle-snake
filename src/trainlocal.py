@@ -81,6 +81,8 @@ for generation in range(NGENERATIONS):
 
 	#creates the snakes
 	my_snakes = []
+	my_snakes.clear() #may seem ambiguous but it to tidy up some memory issues
+
 	NUMSNAKES = 4
 	for _ in range(NUMSNAKES):
 		my_snakes.append(Snake(eps=generation*0.02))
@@ -89,7 +91,7 @@ for generation in range(NGENERATIONS):
 	turns = 0
 
 	#play a set amount of games (TRIALS)
-	TRIALS = 100
+	TRIALS = 50
 	for trial in range(TRIALS):
 		print("GEN", generation, "TRIAL", trial, end='')
 		createGame()
@@ -117,7 +119,7 @@ for generation in range(NGENERATIONS):
 				elif snake.health <= 0:
 					snake = None
 					break
-				actions[i] = filterActions(my_snakes[i].getDirection(getState(obs, snake, turn,), False, False))
+				actions[i] = filterActions(my_snakes[i].getDirection(getState(obs, snake, turn), False, False))
 				snake.health -= 1
 				#comment out this next line if you don't want to watch
 				#env.render(close=True)

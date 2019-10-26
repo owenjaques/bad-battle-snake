@@ -9,15 +9,13 @@ class Snake:
 		self.direction = 0
 		self.createModel()
 		self.health_bad = False
-		self.eps = eps if eps is not None else 1
+		self.eps = eps
 
 	def createModel(self):
 		self.model = Sequential()
 		self.model.add(InputLayer(input_shape=(13,13,4), batch_size=1))
-		self.model.add(Dense(32, activation='relu'))
-		self.model.add(Dense(32, activation='relu'))
-		#self.model.add(Dropout(0.05))
-		self.model.add(Dense(32, activation='relu'))
+		self.model.add(Dense(64, activation='relu'))
+		self.model.add(Dense(64, activation='relu'))
 		self.model.add(Flatten())
 		self.model.add(Dense(4, activation='softmax'))
 		self.model.compile(loss='mse', optimizer='adam')
@@ -38,7 +36,7 @@ class Snake:
 		elif data['you']['health'] == 100 and data['turn'] != 0:
 			if verbose:
 				print("Snake ate some munch last turn")
-			return 3
+			return 50
 		else:
 			if verbose:
 				print("Snake stayed alive last turn")
@@ -93,8 +91,7 @@ class Snake:
 		#my terrible job of implementing q learning
 		#heavily borrowed form a tutorial on machinelearning.com to train a game of cartpole (https://adventuresinmachinelearning.com/reinforcement-learning-tutorial-python-keras/)
 		old_direction = self.direction
-		lr = 0.9
-		y = 0.5
+		y = 0.95
 		directions = ['up', 'down', 'left', 'right']
 		new_s = self.getState(data)
 		#tries to keep a bit of randomness
@@ -108,7 +105,7 @@ class Snake:
 		#will not execute if there is no former move to reward ie: start of training
 		if self.s != []:
 			target_vec = self.model.predict(self.s)
-			target = self.getReward(data, verbose) + lr*(y*(np.max(self.model.predict(new_s)[0])))
+			target = self.getReward(data, verbose) + y*(np.max(self.model.predict(new_s)[0]))
 			target_vec[0][old_direction] = target
 			self.model.fit(self.s, target_vec, epochs=1, verbose=0)
 		self.s = new_s
