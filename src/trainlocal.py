@@ -5,6 +5,7 @@ import time
 from collections import deque
 from snake import Snake
 import matplotlib.pyplot as plt
+from model import Model
 
 #Utilizes the gym-snake environment to train locally with some slight modifications
 # 1 Remove the check in to see if there are more snakes then there should be in the controller 
@@ -83,9 +84,12 @@ for generation in range(NGENERATIONS):
 	my_snakes = []
 	my_snakes.clear() #may seem ambiguous but it to tidy up some memory issues
 
+	#creates shared model
+	model = Model()
+
 	NUMSNAKES = 4
 	for _ in range(NUMSNAKES):
-		my_snakes.append(Snake(eps=generation*0.02))
+		my_snakes.append(Snake(model, eps=generation*0.02))
 
 	#used for calculating average
 	turns = 0
@@ -126,8 +130,7 @@ for generation in range(NGENERATIONS):
 				i += 1
 
 	#saves model only once for enhanced speed
-	for snake in my_snakes:
-		snake.saveModel()
+	model.saveModel()
 
 	generations.append(turns/TRIALS)
 	print("Generation", generation, "Average turn length:", turns/TRIALS)
