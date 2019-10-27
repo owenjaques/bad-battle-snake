@@ -5,6 +5,7 @@ from snake import Snake
 from model import Model
 
 app = Flask(__name__)
+snake = Snake(Model())
 
 @app.route('/', methods = ['GET', 'POST'])
 def route_root():
@@ -33,7 +34,5 @@ def end():
 	return end_response()
 
 if __name__ == '__main__':
-	global snake
-	snake = Snake(Model())
 	# port = input("Please enter the port ex:'8080'")
 	app.run(host='0.0.0.0', port=8080, threaded=False)#had issues with the model predicting with multi threading
