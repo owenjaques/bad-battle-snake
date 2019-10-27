@@ -2,6 +2,7 @@ import json
 from flask import Flask, request
 from api import ping_response, start_response, move_response, end_response
 from snake import Snake
+from model import Model
 
 app = Flask(__name__)
 
@@ -33,6 +34,6 @@ def end():
 
 if __name__ == '__main__':
 	global snake
-	snake = Snake()
-	port = input("Please enter the port ex:'8080'")
-	app.run(host='0.0.0.0', port=port, threaded=False)#had issues with the model predicting with multi threading
+	snake = Snake(Model())
+	# port = input("Please enter the port ex:'8080'")
+	app.run(host='0.0.0.0', port=8080, threaded=False)#had issues with the model predicting with multi threading
